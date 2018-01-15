@@ -1,9 +1,9 @@
 #include "detector.h"
 
 /* 
-    WAKEUP_WORD : compiler passed value
+    WAKEUP : compiler passed value
 */
-Detector(const char* jsgf_filepath)
+Detector::Detector(const char* jsgf_filepath)
 {
     // Load the configuration structure - ps_args() passes the default values
     config = cmd_ln_init(NULL, ps_args(), TRUE,
@@ -19,7 +19,7 @@ Detector(const char* jsgf_filepath)
     
     // create grammer and wake up word search
     ps_set_jsgf_file(ps, modes[Detector::command], jsgf_filepath);
-    ps_set_keyphrase(ps, modes[Detector::keyphrase], WAKUP_WORD);
+    ps_set_keyphrase(ps, modes[Detector::keyphrase], WAKEUP);
 
     // initial detection mode is keyphrase
     mode = keyphrase;
@@ -30,7 +30,7 @@ const char* Detector::get_current_detection_mode(void)
     return modes[mode];
 }
 
-string Detector::detect_from_microphone(void)
+std::string Detector::detect_from_microphone(void)
 {
     // set search mode to either keyphrase or grammer
     ps_set_search(ps, get_current_detection_mode());
@@ -64,7 +64,7 @@ string Detector::detect_from_microphone(void)
             // query pocketsphinx for "hypothesis" of decoded statement
             hyp = ps_get_hyp(ps, NULL);
             // converting from c-style string to c++ string with NULL is a problem
-            string str(hyp ? hyp : " ");
+            std::string str(hyp ? hyp : " ");
             return str;
         }
     }

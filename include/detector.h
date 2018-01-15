@@ -2,6 +2,8 @@
 #include <sphinxbase/ad.h>
 #include <sphinxbase/err.h>
 
+#include <string>
+
 class Detector
 {
 public:
@@ -11,7 +13,7 @@ public:
 	Detector(const char* jsgf_filepath);
 
 	/* detect speech from default microphone */
-	string detect_from_microphone(void);
+	std::string detect_from_microphone(void);
 
 	/* enumerated modes of detection */
 	enum Mode { keyphrase = 0, command = 1 };
@@ -38,9 +40,8 @@ private:
 	/* current mode enum value */
 	Detector::Mode mode;
 	/* internal string representaion of Mode ENUM */
-	const char *modes[] = { "keyphrase", "command" };
+	const char* const modes[2] = { "keyphrase", "command" };
 	/* return the current mode of detection */
-	Detector::Mode get_current_detection_mode(void);
-	
+	const char* get_current_detection_mode(void);
 
-}
+};
