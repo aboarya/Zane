@@ -25,12 +25,12 @@ Detector(const char* jsgf_filepath)
     mode = keyphrase;
 }
 
-const char* get_current_detection_mode(void)
+const char* Detector::get_current_detection_mode(void)
 {
     return modes[mode];
 }
 
-string recognize_from_microphone(void)
+string Detector::recognize_from_microphone(void)
 {
     // set search mode to either keyphrase or grammer
     ps_set_search(ps, get_current_detection_mode());
