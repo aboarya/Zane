@@ -1,0 +1,11 @@
+#JSGF V1.0;
+
+grammar commmands;
+
+public <rule> = <action> [<preposition>] [<objects>] [<preposition>] [<objects>];
+
+<action> = turn | say | open;
+
+<objects> = weather | chrome | tv | lights;
+
+<preposition> = the | on | off;
