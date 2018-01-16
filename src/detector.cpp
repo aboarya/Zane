@@ -1,9 +1,8 @@
 #include "detector.h"
 
-/* 
-    WAKEUP : compiler passed value
-*/
-Detector::Detector(const char* jsgf_filepath)
+using namespace DetectorSpace;
+
+Detector::Detector(const char* jsgf_filepath, const vector<AgentSpace::Agent> &agents)
 {
     // Load the configuration structure - ps_args() passes the default values
     config = cmd_ln_init(NULL, ps_args(), TRUE,
@@ -19,10 +18,22 @@ Detector::Detector(const char* jsgf_filepath)
     
     // create grammer and wake up word search
     ps_set_jsgf_file(ps, modes[Detector::command], jsgf_filepath);
-    ps_set_keyphrase(ps, modes[Detector::keyphrase], WAKEUP);
+    
+    for (auto const &agent : agents)
+    {
+        //get the name of the agent (provided during init via json files)
+        const char* name = agent.get_agent_wakeup_keyword().c_str();
+        // set the name of search and the wakeup work to name of agent
+        ps_set_keyphrase(ps, name, name);   
+    }
 
     // initial detection mode is keyphrase
     mode = keyphrase;
+}
+
+void Detector::set_current_detection_mode(Detector::Mode d_mode)
+{
+    mode = d_mode;
 }
 
 const char* Detector::get_current_detection_mode(void)
@@ -30,7 +41,12 @@ const char* Detector::get_current_detection_mode(void)
     return modes[mode];
 }
 
-std::string Detector::detect_from_microphone(void)
+bool Detector::is_wakeup_spoken()
+{
+    return false;
+}
+
+string Detector::detect_from_microphone(void)
 {
     // set search mode to either keyphrase or grammer
     ps_set_search(ps, get_current_detection_mode());
@@ -64,7 +80,7 @@ std::string Detector::detect_from_microphone(void)
             // query pocketsphinx for "hypothesis" of decoded statement
             hyp = ps_get_hyp(ps, NULL);
             // converting from c-style string to c++ string with NULL is a problem
-            std::string str(hyp ? hyp : " ");
+            string str(hyp ? hyp : " ");
             return str;
         }
     }

@@ -38,3 +38,5 @@ build/
 # Sublime project file
 *.sublime-project
 *.sublime-workspace
+
+include/json.hpp
